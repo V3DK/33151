@@ -10,7 +10,7 @@ G = 6.67e-11
 
 ved.mass = 5e24
 tilden.mass = 5e24
-chamy.mass = 5e24
+chamy.mass = 5e1
 
 s = 0.965
 ved.speed = 0
