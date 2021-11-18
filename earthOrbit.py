@@ -4,8 +4,8 @@ from vpython import *
 # Needed Constants
 # in m, m/s
 sun_earth_distance = 149597870000
-speed_of_earth = 29839.717
-
+speed_of_earth = 29839.7170
+#changes
 #
 # Set up te displays
 #
