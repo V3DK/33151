@@ -34,7 +34,7 @@ size2=4.0e-13
 
 GoldMass = (1.67e-27) * 197
 GoldRadius  = 0.5 * 3.285e-14
-
+#e
 AlphaRadius = 1e-15
 AlphaEnergy = 1.6e-12
 
