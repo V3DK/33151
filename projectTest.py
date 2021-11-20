@@ -3,7 +3,8 @@ from vpython import *
 #0.4,0.2,0.6
 brown = vector(0.4,0.2,0.6)
 
-minRad = 6e6
+minRad = 2e6
+d = 1e8
 
 sunEarthDist = 1.49598e11
 eSpeed = 29839.7170
@@ -14,20 +15,19 @@ earthMass = 5.972e24
 sunMass = 1.989e30
 moonMass = 7.347673e22
 
-ved = sphere(pos=vector(sunEarthDist,0,0),radius=minRad,color=color.rgb_to_hsv(brown))
-tilden = sphere(pos=vector(sunEarthDist + earthMoonDist,0,0),radius=minRad,color=color.white)
+ved = sphere(pos=vector(d,0,0),radius=minRad,color=color.rgb_to_hsv(brown))
+tilden = sphere(pos=vector(-d,0,0),radius=minRad,color=color.white)
 chamy = sphere(pos=vector(0,0,0),radius=minRad * 1, color=color.yellow)
 
 G = 6.67e-11
 
-ved.mass = earthMass
-tilden.mass = moonMass
-chamy.mass = sunMass
+ved.mass = 1e23
+tilden.mass = 1e23
+chamy.mass = 1e23
 
-ved.speed = eSpeed
-
-tilden.speed = 1 * (eSpeed + mSpeed)
-chamy.speed = 0;
+ved.speed = 100
+tilden.speed = -100
+chamy.speed = 0
 
 ved.momentum = ved.mass*vector(0, ved.speed, 0)
 tilden.momentum = tilden.mass*vector(0, tilden.speed, 0)
@@ -42,12 +42,12 @@ tilden.trail.append(pos=tilden.pos)
 chamy.trail.append(pos=chamy.pos)
 
 time = 0
-dt = 361
+dt = 3600
 
 run = True
 
 while run:
-    rate(500)
+    rate(100)
     time += dt
 
     rTV = ved.pos - tilden.pos
@@ -78,7 +78,7 @@ while run:
     tilden.momentum += tilden.force * dt
     chamy.momentum += chamy.force * dt
 
-    prev = ved.pos.y
+    prev = tilden.pos.y - ved.pos.y
 
 
     ved.pos += (ved.momentum / ved.mass) * dt
@@ -91,13 +91,12 @@ while run:
     tilden.trail.append(pos=tilden.pos)
     chamy.trail.append(pos=chamy.pos)
 
-    curr = ved.pos.y
+    curr = tilden.pos.y - ved.pos.y
 
     #"""
     if((curr != 0) and (prev != 0)):
-        if((curr / abs(curr)) != (prev / abs(prev))):
-            print(time)
-    else:
-        print(time)
+        if((curr / abs(curr)) > (prev / abs(prev))):
+            print(time / 86400, "days,", time, "seconds")
+
     #"""
 
