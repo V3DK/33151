@@ -30,7 +30,8 @@ ved.speed = eSpeed
 tilden.speed = -p * 100 * 0
 chamy.speed = 0
 
-ved.momentum = ved.mass*vector(0, ved.speed, 0)
+ved.velocity = vector(0, ved.speed, 0)
+ved.accel = vector(0, 0, 0)
 tilden.momentum = tilden.mass*vector(0, tilden.speed, 0)
 chamy.momentum = chamy.mass*vector(0, chamy.speed, 0)
 
@@ -68,10 +69,7 @@ def update():
     ved.force = fCV
     # tilden.force = vector(0, 0, 0)
     chamy.force = -fCV
-    vAccel = ved.force / ved.mass
-
-vedPosPrev = ved.pos
-vedPosCurr = ved.pos + ((ved.momentum / ved.mass) * dt) + ( (0.5 * vAccel) * (dt**2))
+    ved.accel = ved.force / ved.mass
 
 run = True
 
@@ -81,17 +79,18 @@ while run:
     #mark last position
     prev = ved.pos.y
 
-    #update all radius and forces
+    #update earth (ved)
+    #ved.pos += (ved.velocity * dt) + ((0.5 * vAccel) * (dt**2))
+
+    ved.pos += ved.velocity * dt
+    ved.velocity += ved.accel * dt
+
     update()
 
-    #update earth (ved)
-    vedPosNext = (2 * vedPosCurr) - (vedPosPrev) + (vAccel * (dt**2))
-    ved.pos = vedPosNext
-
-    #update for next iteration
-    vedPosPrev = vedPosCurr
-    vedPosCurr = vedPosNext
-    time += dt
+    # update all radius and forces
+    #accelCurr = vAccel
+    #update()
+    #ved.velocity += (accelCurr + vAccel) * (0.5 * dt)
 
     #update sun
     chamy.momentum += chamy.force * dt
@@ -111,4 +110,7 @@ while run:
             print(time / 86400, "days,", time, "seconds")
 
     #"""
+
+     # update for next iteration
+    time += dt
 
