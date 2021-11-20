@@ -3,7 +3,7 @@ from vpython import *
 #0.4,0.2,0.6
 brown = vector(0.4,0.2,0.6)
 
-minRad = 2e6
+minRad = 1e6
 d = 1e8
 
 sunEarthDist = 1.49598e11
@@ -15,18 +15,19 @@ earthMass = 5.972e24
 sunMass = 1.989e30
 moonMass = 7.347673e22
 
-ved = sphere(pos=vector(d,0,0),radius=minRad,color=color.rgb_to_hsv(brown))
+ved = sphere(pos=vector(sunEarthDist,0,0),radius=minRad,color=color.rgb_to_hsv(brown))
 tilden = sphere(pos=vector(-d,0,0),radius=minRad,color=color.white)
 chamy = sphere(pos=vector(0,0,0),radius=minRad * 1, color=color.yellow)
 
 G = 6.67e-11
 
-ved.mass = 1e23
+ved.mass = earthMass
 tilden.mass = 1e23
-chamy.mass = 1e23
+chamy.mass = sunMass
 
-ved.speed = 100
-tilden.speed = -100
+p = 1
+ved.speed = eSpeed
+tilden.speed = -p * 100 * 0
 chamy.speed = 0
 
 ved.momentum = ved.mass*vector(0, ved.speed, 0)
@@ -44,54 +45,65 @@ chamy.trail.append(pos=chamy.pos)
 time = 0
 dt = 3600
 
-run = True
+rTV = ved.pos - tilden.pos
+rTC = chamy.pos - tilden.pos
+rCV = ved.pos - chamy.pos
+fTV = ((-(G) * (tilden.mass * ved.mass)) * (1 / (mag2(rTV)))) * norm(rTV)
+fTC = ((-(G) * (tilden.mass * chamy.mass)) * (1 / (mag2(rTC)))) * norm(rTC)
+fCV = ((-(G) * (chamy.mass * ved.mass)) * (1 / (mag2(rCV)))) * norm(rCV)
+ved.force = fCV
+# tilden.force = vector(0, 0, 0)
+chamy.force = -fCV
+vAccel = ved.force / ved.mass
 
-while run:
-    rate(100)
-    time += dt
 
+
+def update():
     rTV = ved.pos - tilden.pos
     rTC = chamy.pos - tilden.pos
     rCV = ved.pos - chamy.pos
-
-    #if ((mag(rTV) < minRad) or (mag(rTC) < minRad) or (mag(rCV) < minRad)):
-        #run = False
-
     fTV = ((-(G) * (tilden.mass * ved.mass)) * (1 / (mag2(rTV)))) * norm(rTV)
     fTC = ((-(G) * (tilden.mass * chamy.mass)) * (1 / (mag2(rTC)))) * norm(rTC)
     fCV = ((-(G) * (chamy.mass * ved.mass)) * (1 / (mag2(rCV)))) * norm(rCV)
-
-    #"""
-    ved.force = fTV + fCV
-    tilden.force = -(fTV + fTC)
-    chamy.force = fTC - fCV
-    #"""
-
-    """
     ved.force = fCV
-    tilden.force = vector(0, 0, 0)
+    # tilden.force = vector(0, 0, 0)
     chamy.force = -fCV
-    #print(ved.force, tilden.force, chamy.force)
-    """
+    vAccel = ved.force / ved.mass
 
-    ved.momentum += ved.force * dt
-    tilden.momentum += tilden.force * dt
+vedPosPrev = ved.pos
+vedPosCurr = ved.pos + ((ved.momentum / ved.mass) * dt) + ( (0.5 * vAccel) * (dt**2))
+
+run = True
+
+while run:
+    rate(500)
+
+    #mark last position
+    prev = ved.pos.y
+
+    #update all radius and forces
+    update()
+
+    #update earth (ved)
+    vedPosNext = (2 * vedPosCurr) - (vedPosPrev) + (vAccel * (dt**2))
+    ved.pos = vedPosNext
+
+    #update for next iteration
+    vedPosPrev = vedPosCurr
+    vedPosCurr = vedPosNext
+    time += dt
+
+    #update sun
     chamy.momentum += chamy.force * dt
-
-    prev = tilden.pos.y - ved.pos.y
-
-
-    ved.pos += (ved.momentum / ved.mass) * dt
-    tilden.pos += (tilden.momentum / tilden.mass) * dt
     chamy.pos += (chamy.momentum / chamy.mass) * dt
 
-   # print(ved.pos, tilden.pos, chamy.pos)
-
+    #trails
     ved.trail.append(pos = ved.pos)
     tilden.trail.append(pos=tilden.pos)
     chamy.trail.append(pos=chamy.pos)
 
-    curr = tilden.pos.y - ved.pos.y
+    #mark current position
+    curr = ved.pos.y
 
     #"""
     if((curr != 0) and (prev != 0)):
