@@ -42,7 +42,7 @@ tilden.trail.append(pos=tilden.pos)
 chamy.trail.append(pos=chamy.pos)
 
 time = 0
-dt = 360
+dt = 361
 
 run = True
 
