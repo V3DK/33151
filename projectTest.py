@@ -111,7 +111,7 @@ update()
 
 maxDT = 800
 minDT = 10
-stableRate = 400
+stableRate = 200
 maxRate = 500
 
 TVInitDist = mag(ved.pos - tilden.pos)
@@ -140,8 +140,8 @@ while run:
 
     #determining rate -> keep program running same "speed"
     newRate = stableRate * maxDT / dt
-    if(newRate > maxRate):
-        newRate = maxRate
+    #if(newRate > maxRate):
+    #    newRate = maxRate
     rate(newRate)
 
     #update lines
@@ -209,11 +209,9 @@ while run:
     CVCurrDist = mag(rCV)
 
     list = [TVCurrDist, TCCurrDist, CVCurrDist]
-
     minDist = nsmallest(1, list)
-
-
     dt = ceil(((minDist[0] / avgDist) * (maxDT - minDT)) + minDT)
+    #failsafe
     if(dt > maxDT):
         dt = maxDT
 
@@ -222,6 +220,6 @@ while run:
 
     #c.clear()
 
-    print(dt, newRate, minDist[0])
+    print(dt, newRate, minDist[0] / avgDist)
 
 
