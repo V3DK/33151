@@ -4,7 +4,7 @@ from heapq import nsmallest
 
 brown = vector(0.4,0.2,0.6)
 
-minRad = 2.5e6
+minRad = 1e2
 d = 1e8
 
 sunEarthDist = 1.49598e11
@@ -16,55 +16,37 @@ earthMass = 5.972e24
 sunMass = 1.989e30
 moonMass = 7.347673e22
 
-ved = sphere(pos=vector(d * (0.97000436),-d * 0.24308753, 0),radius=minRad,color=color.rgb_to_hsv(brown))
-tilden = sphere(pos=vector(0,0,0),radius=minRad,color=color.white)
-chamy = sphere(pos=vector(-d * (0.97000436), d * 0.24308753, 0),radius=minRad * 1, color=color.yellow)
+ved = sphere(pos=vector(3 * d, 0, 0),radius=5*minRad,color=color.rgb_to_hsv(brown))
+tilden = sphere(pos=vector(0,0,0),radius=4*minRad,color=color.white)
+chamy = sphere(pos=vector(3*d, 4*d, 0),radius=3*minRad, color=color.yellow)
 
 G = 6.67e-11
 
-ved.mass = 1e23
-tilden.mass = 1e23
-chamy.mass = 1e23
-
-p = 1.3
-ved.speed = 50 * p
-tilden.speed = 100 * p
-chamy.speed = 50 * p
+ved.mass = 5e23
+tilden.mass = 4e23
+chamy.mass = 3e23
 
 #"""
 b = 258.25
 v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
-ved.velocity = vector(-v8x / 2, -v8y / 2, 0)
+#ved.velocity = vector(-v8x / 2, -v8y / 2, 0)
+ved.velocity = vector(0, 0, 0)
 ved.accel = vector(0, 0, 0)
 
-tilden.velocity = vector(v8x, v8y, 0)
+#tilden.velocity = vector(v8x, v8y, 0)
+tilden.velocity = vector(0, 0, 0)
 tilden.accel = vector(0, 0, 0)
 
-chamy.velocity = vector(-v8x / 2, -v8y / 2, 0)
+#chamy.velocity = vector(-v8x / 2, -v8y / 2, 0)
+chamy.velocity = vector(0, 0, 0)
 chamy.accel = vector(0, 0, 0)
 #"""
 
-"""
-p = 1.7
-ved.speed = 100 * p
-tilden.speed = 100 * p
-chamy.speed = 100 * p
-
-ved.velocity = vector(ved.speed, ved.speed, 0)
-ved.accel = vector(0, 0, 0)
-
-tilden.velocity = vector(-tilden.speed, -tilden.speed, 0)
-tilden.accel = vector(0, 0, 0)
-
-chamy.velocity = vector(chamy.speed, chamy.speed, 0)
-chamy.accel = vector(0, 0, 0)
-"""
-
-ved.trail = curve(color=color.red) #,retain=250)
-tilden.trail = curve(color=color.green) #,retain=250)
-chamy.trail = curve(color=color.blue) #,retain=250)
+ved.trail = curve(color=color.blue) #,retain=250)
+tilden.trail = curve(color=color.red) #,retain=250)
+chamy.trail = curve(color=color.green) #,retain=250)
 
 
 ved.trail.append(pos = ved.pos)
@@ -84,6 +66,7 @@ chamy.force = vector(0, 0, 0)
 
 def update():
     #update distances
+    global rTV, rTC, rCV, fTV, fTC, fCV
     rTV = ved.pos - tilden.pos
     rTC = chamy.pos - tilden.pos
     rCV = ved.pos - chamy.pos
@@ -109,10 +92,10 @@ CM.trail = curve(color=color.magenta) #,retain=250)
 update()
 
 
-maxDT = 800
-minDT = 10
-stableRate = 200
-maxRate = 500
+maxDT = 2000
+minDT = 1
+stableRate = 300
+maxRate = 600
 
 TVInitDist = mag(ved.pos - tilden.pos)
 TCInitDist = mag(chamy.pos - tilden.pos)
@@ -122,6 +105,7 @@ time = 0
 dt = maxDT
 
 #lines between
+
 a1 = curve(color = color.gray(0.5), retain = 2)
 b1 = curve(color = color.gray(0.5), retain = 2)
 c1 = curve(color = color.gray(0.5), retain = 2)
@@ -130,22 +114,18 @@ b2 = curve(color = color.gray(0.5), retain = 2)
 c2 = curve(color = color.gray(0.5), retain = 2)
 
 run = True
-showLines = True
+showLines = False
 
 while run:
-    #need these here...not sure why
-    rTV = ved.pos - tilden.pos
-    rTC = chamy.pos - tilden.pos
-    rCV = ved.pos - chamy.pos
 
     #determining rate -> keep program running same "speed"
-    newRate = stableRate * maxDT / dt
+    #newRate = stableRate * maxDT / dt
     #if(newRate > maxRate):
     #    newRate = maxRate
-    rate(newRate)
+    rate(100)
 
     #update lines
-
+    """
     if(showLines):
         a1.append(tilden.pos, chamy.pos)
         b1.append(ved.pos, tilden.pos)
@@ -154,19 +134,21 @@ while run:
         a2.append(tilden.pos, CM.pos)
         b2.append(ved.pos, CM.pos)
         c2.append(CM.pos, chamy.pos)
+    """
 
     #center of mass
-    cOfM = ((ved.pos * ved.mass) + (chamy.pos * chamy.mass) + (tilden.pos * tilden.mass)) / (ved.mass + chamy.mass + tilden.mass)
-    CM.pos = cOfM
+    #cOfM = ((ved.pos * ved.mass) + (chamy.pos * chamy.mass) + (tilden.pos * tilden.mass)) / (ved.mass + chamy.mass + tilden.mass)
+    #CM.pos = cOfM
 
     #stopping state -> end sim if any masses collide
     if ((mag(rTV) < minRad) or (mag(rTC) < minRad) or (mag(rCV) < minRad)):
         run = False
+        print("collision!")
 
 
 
     #mark last position
-    prev = ved.pos.y
+    #prev = ved.pos.y
 
     #update pos via verlet velocity
     ved.pos += (ved.velocity * dt) + ((0.5 * ved.accel) * (dt**2))
@@ -188,12 +170,10 @@ while run:
     ved.trail.append(pos = ved.pos)
     tilden.trail.append(pos=tilden.pos)
     chamy.trail.append(pos=chamy.pos)
-    CM.trail.append(pos=CM.pos)
-
-
+    #CM.trail.append(pos=CM.pos)
 
     #mark current position
-    curr = ved.pos.y
+    #curr = ved.pos.y
 
     """ determine period
     if((curr != 0) and (prev != 0)):
@@ -201,8 +181,7 @@ while run:
             print(time / 86400, "days,", time, "seconds")
 
     """
-
-    #determining dt based on dt
+    #determining dt based on distance
     avgDist = (mag(rTV) + mag(rTC) + mag(rCV)) * (1/3)
     TVCurrDist = mag(rTV)
     TCCurrDist = mag(rTC)
@@ -220,6 +199,6 @@ while run:
 
     #c.clear()
 
-    print(dt, newRate, minDist[0] / avgDist)
+    #print(dt, newRate, minDist[0] / avgDist)
 
 
