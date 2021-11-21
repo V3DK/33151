@@ -16,9 +16,9 @@ earthMass = 5.972e24
 sunMass = 1.989e30
 moonMass = 7.347673e22
 
-ved = sphere(pos=vector(d * (320 / 360),-d * (80 / 360), 0),radius=minRad,color=color.rgb_to_hsv(brown))
+ved = sphere(pos=vector(d * (0.97000436),-d * 0.24308753, 0),radius=minRad,color=color.rgb_to_hsv(brown))
 tilden = sphere(pos=vector(0,0,0),radius=minRad,color=color.white)
-chamy = sphere(pos=vector(-d * (320 / 360),d * (80 / 360), 0),radius=minRad * 1, color=color.yellow)
+chamy = sphere(pos=vector(-d * (0.97000436), d * 0.24308753, 0),radius=minRad * 1, color=color.yellow)
 
 G = 6.67e-11
 
@@ -26,23 +26,28 @@ ved.mass = 1e23
 tilden.mass = 1e23
 chamy.mass = 1e23
 
-p = 1.7
-ved.speed = 100 * p
+p = 1.3
+ved.speed = 50 * p
 tilden.speed = 100 * p
-chamy.speed = 100 * p
+chamy.speed = 50 * p
 
-ved.velocity = vector(ved.speed, ved.speed, 0)
+b = 250
+v8x = 0.93240737 * b
+v8y = 0.86473146 * b
+
+ved.velocity = vector(v8x / 2, v8y / 2, 0)
 ved.accel = vector(0, 0, 0)
 
-tilden.velocity = vector(-tilden.speed, -tilden.speed, 0)
+tilden.velocity = vector(-v8x, -v8y, 0)
 tilden.accel = vector(0, 0, 0)
 
-chamy.velocity = vector(chamy.speed, chamy.speed, 0)
+chamy.velocity = vector(v8x / 2, v8y / 2, 0)
 chamy.accel = vector(0, 0, 0)
 
 ved.trail = curve(color=color.red) #,retain=250)
 tilden.trail = curve(color=color.green) #,retain=250)
 chamy.trail = curve(color=color.blue) #,retain=250)
+
 
 ved.trail.append(pos = ved.pos)
 tilden.trail.append(pos=tilden.pos)
@@ -78,6 +83,10 @@ def update():
     tilden.accel = tilden.force / tilden.mass
     chamy.accel = chamy.force / chamy.mass
 
+#center of mass initialization
+CM = sphere(pos=vector(0,0,0),radius=minRad * 0.1, color=color.magenta)
+CM.trail = curve(color=color.magenta) #,retain=250)
+
 #update before while loop starts
 update()
 
@@ -103,8 +112,15 @@ while run:
 
     rate(500)
 
+    #center of mass
+    cOfM = ((ved.pos * ved.mass) + (chamy.pos * chamy.mass) + (tilden.pos * tilden.mass)) / (ved.mass + chamy.mass + tilden.mass)
+    CM.pos = cOfM
+
+    #stopping state -> end sim if any masses collide
     if ((mag(rTV) < minRad) or (mag(rTC) < minRad) or (mag(rCV) < minRad)):
         run = False
+
+
 
     #mark last position
     prev = ved.pos.y
@@ -129,16 +145,17 @@ while run:
     ved.trail.append(pos = ved.pos)
     tilden.trail.append(pos=tilden.pos)
     chamy.trail.append(pos=chamy.pos)
+    CM.trail.append(pos=CM.pos)
 
     #mark current position
     curr = ved.pos.y
 
-    #"""
+    """ determine period
     if((curr != 0) and (prev != 0)):
         if((curr / abs(curr)) > (prev / abs(prev))):
             print(time / 86400, "days,", time, "seconds")
 
-    #"""
+    """
 
     #determining dt based on dt
     avgDist = (mag(rTV) + mag(rTC) + mag(rCV)) * (1/3)
