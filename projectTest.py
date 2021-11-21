@@ -93,6 +93,8 @@ update()
 
 maxDT = 700
 minDT = 10
+stableRate = 200
+maxRate = 750
 
 TVInitDist = mag(ved.pos - tilden.pos)
 TCInitDist = mag(chamy.pos - tilden.pos)
@@ -102,7 +104,17 @@ time = 0
 dt = maxDT
 
 
+
+#lines between
+a1 = curve(color = color.white, retain = 2)
+b1 = curve(color = color.white, retain = 2)
+c1 = curve(color = color.white, retain = 2)
+a2 = curve(color = color.white, retain = 2)
+b2 = curve(color = color.white, retain = 2)
+c2 = curve(color = color.white, retain = 2)
+
 run = True
+showLines = True
 
 while run:
     #need these here...not sure why
@@ -110,7 +122,22 @@ while run:
     rTC = chamy.pos - tilden.pos
     rCV = ved.pos - chamy.pos
 
-    rate(500)
+    #determining rate -> keep program running same "speed"
+    newRate = stableRate * maxDT / dt
+    if(newRate > maxRate):
+        newRate = maxRate
+    rate(newRate)
+
+    #update lines
+
+    if(showLines):
+        a1.append(tilden.pos, chamy.pos)
+        b1.append(ved.pos, tilden.pos)
+        c1.append(ved.pos, chamy.pos)
+
+        a2.append(tilden.pos, CM.pos)
+        b2.append(ved.pos, CM.pos)
+        c2.append(CM.pos, chamy.pos)
 
     #center of mass
     cOfM = ((ved.pos * ved.mass) + (chamy.pos * chamy.mass) + (tilden.pos * tilden.mass)) / (ved.mass + chamy.mass + tilden.mass)
@@ -147,6 +174,8 @@ while run:
     chamy.trail.append(pos=chamy.pos)
     CM.trail.append(pos=CM.pos)
 
+
+
     #mark current position
     curr = ved.pos.y
 
@@ -174,6 +203,8 @@ while run:
 
      # update for next iteration
     time += dt
+
+    #c.clear()
 
     #print(dt)
 
