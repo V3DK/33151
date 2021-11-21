@@ -4,7 +4,7 @@ from heapq import nsmallest
 
 brown = vector(0.4,0.2,0.6)
 
-minRad = 1e6
+minRad = 2.5e6
 d = 1e8
 
 sunEarthDist = 1.49598e11
@@ -31,6 +31,7 @@ ved.speed = 50 * p
 tilden.speed = 100 * p
 chamy.speed = 50 * p
 
+#"""
 b = 258.25
 v8x = 0.93240737 * b
 v8y = 0.86473146 * b
@@ -43,6 +44,23 @@ tilden.accel = vector(0, 0, 0)
 
 chamy.velocity = vector(v8x / 2, v8y / 2, 0)
 chamy.accel = vector(0, 0, 0)
+#"""
+
+"""
+p = 1.7
+ved.speed = 100 * p
+tilden.speed = 100 * p
+chamy.speed = 100 * p
+
+ved.velocity = vector(ved.speed, ved.speed, 0)
+ved.accel = vector(0, 0, 0)
+
+tilden.velocity = vector(-tilden.speed, -tilden.speed, 0)
+tilden.accel = vector(0, 0, 0)
+
+chamy.velocity = vector(chamy.speed, chamy.speed, 0)
+chamy.accel = vector(0, 0, 0)
+"""
 
 ved.trail = curve(color=color.red) #,retain=250)
 tilden.trail = curve(color=color.green) #,retain=250)
@@ -91,10 +109,10 @@ CM.trail = curve(color=color.magenta) #,retain=250)
 update()
 
 
-maxDT = 700
+maxDT = 800
 minDT = 10
-stableRate = 200
-maxRate = 750
+stableRate = 400
+maxRate = 500
 
 TVInitDist = mag(ved.pos - tilden.pos)
 TCInitDist = mag(chamy.pos - tilden.pos)
@@ -103,15 +121,13 @@ CVInitDist = mag(ved.pos - chamy.pos)
 time = 0
 dt = maxDT
 
-
-
 #lines between
-a1 = curve(color = color.white, retain = 2)
-b1 = curve(color = color.white, retain = 2)
-c1 = curve(color = color.white, retain = 2)
-a2 = curve(color = color.white, retain = 2)
-b2 = curve(color = color.white, retain = 2)
-c2 = curve(color = color.white, retain = 2)
+a1 = curve(color = color.gray(0.5), retain = 2)
+b1 = curve(color = color.gray(0.5), retain = 2)
+c1 = curve(color = color.gray(0.5), retain = 2)
+a2 = curve(color = color.gray(0.5), retain = 2)
+b2 = curve(color = color.gray(0.5), retain = 2)
+c2 = curve(color = color.gray(0.5), retain = 2)
 
 run = True
 showLines = True
@@ -206,6 +222,6 @@ while run:
 
     #c.clear()
 
-    #print(dt)
+    print(dt, newRate)
 
 
