@@ -36,13 +36,13 @@ b = 258.25
 v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
-ved.velocity = vector(v8x / 2, v8y / 2, 0)
+ved.velocity = vector(-v8x / 2, -v8y / 2, 0)
 ved.accel = vector(0, 0, 0)
 
-tilden.velocity = vector(-v8x, -v8y, 0)
+tilden.velocity = vector(v8x, v8y, 0)
 tilden.accel = vector(0, 0, 0)
 
-chamy.velocity = vector(v8x / 2, v8y / 2, 0)
+chamy.velocity = vector(-v8x / 2, -v8y / 2, 0)
 chamy.accel = vector(0, 0, 0)
 #"""
 
@@ -222,6 +222,6 @@ while run:
 
     #c.clear()
 
-    print(dt, newRate)
+    print(dt, newRate, minDist[0])
 
 
