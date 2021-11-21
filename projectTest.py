@@ -31,7 +31,7 @@ ved.speed = 50 * p
 tilden.speed = 100 * p
 chamy.speed = 50 * p
 
-b = 250
+b = 258.25
 v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
