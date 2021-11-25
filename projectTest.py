@@ -4,7 +4,7 @@ from heapq import nsmallest
 
 brown = vector(0.4,0.2,0.6)
 
-minRad = 1e2
+minRad = 1e6
 d = 1e8
 
 sunEarthDist = 1.49598e11
@@ -16,9 +16,9 @@ earthMass = 5.972e24
 sunMass = 1.989e30
 moonMass = 7.347673e22
 
-ved = sphere(pos=vector(d * (0.97000436),-d * 0.24308753, 0),radius=minRad,color=color.rgb_to_hsv(brown))
-tilden = sphere(pos=vector(0,0,0),radius=minRad,color=color.white)
-chamy = sphere(pos=vector(-d * (0.97000436), d * 0.24308753, 0),radius=minRad * 1, color=color.yellow)
+ved = sphere(pos=vector(0, -d, 0),radius=minRad,color=color.rgb_to_hsv(brown))
+tilden = sphere(pos=vector(0.8660254038 * d,0.5 * d,0),radius=minRad,color=color.white)
+chamy = sphere(pos=vector(-0.8660254038 * d,0.5 * d,0),radius=minRad, color=color.yellow)
 
 G = 6.67e-11
 
@@ -26,23 +26,21 @@ ved.mass = 1e23
 tilden.mass = 1e23
 chamy.mass = 1e23
 
-#"""
 b = 258.25
 v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
-ved.velocity = vector(-v8x / 2, -v8y / 2, 0)
-#ved.velocity = vector(0, 0, 0)
+s = 1
+v = 100
+
+ved.velocity = vector(v, 0, 0)
 ved.accel = vector(0, 0, 0)
 
-tilden.velocity = vector(v8x, v8y, 0)
-#tilden.velocity = vector(0, 0, 0)
+tilden.velocity = vector(-0.5 * v, 0.8660254038 * v, 0)
 tilden.accel = vector(0, 0, 0)
 
-chamy.velocity = vector(-v8x / 2, -v8y / 2, 0)
-#chamy.velocity = vector(0, 0, 0)
+chamy.velocity = vector(-0.5 * v, -0.8660254038 * v, 0)
 chamy.accel = vector(0, 0, 0)
-#"""
 
 ved.trail = curve(color=color.blue) #,retain=250)
 tilden.trail = curve(color=color.red) #,retain=250)
@@ -130,7 +128,7 @@ b2 = curve(color = color.gray(0.5), retain = 2)
 c2 = curve(color = color.gray(0.5), retain = 2)
 
 run = True
-showLines = True
+showLines = False
 
 while run:
 
