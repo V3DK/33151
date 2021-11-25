@@ -31,7 +31,7 @@ v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
 s = 1
-v = 196.27
+v = 196.23746
 #100 - three rings
 #250 - three rings but bodies start on inside
 
@@ -116,7 +116,7 @@ TCInitDist = mag(chamy.pos - tilden.pos)
 CVInitDist = mag(ved.pos - chamy.pos)
 
 initEnergy = energy()
-print(initEnergy)
+#print(initEnergy)
 
 time = 0
 dt = maxDT
@@ -161,7 +161,7 @@ while run:
         print("collision!")
 
     #mark last position
-    #prev = ved.pos.y
+    prev = chamy.pos.x
 
     #update pos via verlet velocity
     ved.pos += (ved.velocity * dt) + ((0.5 * ved.accel) * (dt**2))
@@ -199,20 +199,20 @@ while run:
     CM.trail.append(pos=CM.pos)
 
     #mark current position
-    #curr = ved.pos.y
+    curr = chamy.pos.x
 
-    """ determine period
+    #determine period
     if((curr != 0) and (prev != 0)):
         if((curr / abs(curr)) > (prev / abs(prev))):
-            print(time / 86400, "days,", time, "seconds")
+            print((chamy.pos.y - (-d)))
 
-    """
 
     #checking for energy conservation: GPE + KE
     pct = abs((energy() / initEnergy) - 1) * 100
     #print(pct, time / 86400, pct > 5)
 
     #stop program if error in energy > 5%
+    #print(time / 86400)
     if(pct > 5):
         run = False
         print(pct, time / 86400, pct > 5)
