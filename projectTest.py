@@ -16,31 +16,31 @@ earthMass = 5.972e24
 sunMass = 1.989e30
 moonMass = 7.347673e22
 
-ved = sphere(pos=vector(3 * d, 0, 0),radius=5*minRad,color=color.rgb_to_hsv(brown))
-tilden = sphere(pos=vector(0,0,0),radius=4*minRad,color=color.white)
-chamy = sphere(pos=vector(3*d, 4*d, 0),radius=3*minRad, color=color.yellow)
+ved = sphere(pos=vector(d * (0.97000436),-d * 0.24308753, 0),radius=minRad,color=color.rgb_to_hsv(brown))
+tilden = sphere(pos=vector(0,0,0),radius=minRad,color=color.white)
+chamy = sphere(pos=vector(-d * (0.97000436), d * 0.24308753, 0),radius=minRad * 1, color=color.yellow)
 
 G = 6.67e-11
 
-ved.mass = 5e23
-tilden.mass = 4e23
-chamy.mass = 3e23
+ved.mass = 1e23
+tilden.mass = 1e23
+chamy.mass = 1e23
 
 #"""
 b = 258.25
 v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
-#ved.velocity = vector(-v8x / 2, -v8y / 2, 0)
-ved.velocity = vector(0, 0, 0)
+ved.velocity = vector(-v8x / 2, -v8y / 2, 0)
+#ved.velocity = vector(0, 0, 0)
 ved.accel = vector(0, 0, 0)
 
-#tilden.velocity = vector(v8x, v8y, 0)
-tilden.velocity = vector(0, 0, 0)
+tilden.velocity = vector(v8x, v8y, 0)
+#tilden.velocity = vector(0, 0, 0)
 tilden.accel = vector(0, 0, 0)
 
-#chamy.velocity = vector(-v8x / 2, -v8y / 2, 0)
-chamy.velocity = vector(0, 0, 0)
+chamy.velocity = vector(-v8x / 2, -v8y / 2, 0)
+#chamy.velocity = vector(0, 0, 0)
 chamy.accel = vector(0, 0, 0)
 #"""
 
@@ -130,7 +130,7 @@ b2 = curve(color = color.gray(0.5), retain = 2)
 c2 = curve(color = color.gray(0.5), retain = 2)
 
 run = True
-showLines = False
+showLines = True
 
 while run:
 
@@ -141,7 +141,6 @@ while run:
     rate(100)
 
     #update lines
-    """
     if(showLines):
         a1.append(tilden.pos, chamy.pos)
         b1.append(ved.pos, tilden.pos)
@@ -150,11 +149,11 @@ while run:
         a2.append(tilden.pos, CM.pos)
         b2.append(ved.pos, CM.pos)
         c2.append(CM.pos, chamy.pos)
-    """
+
 
     #center of mass
-    #cOfM = ((ved.pos * ved.mass) + (chamy.pos * chamy.mass) + (tilden.pos * tilden.mass)) / (ved.mass + chamy.mass + tilden.mass)
-    #CM.pos = cOfM
+    cOfM = ((ved.pos * ved.mass) + (chamy.pos * chamy.mass) + (tilden.pos * tilden.mass)) / (ved.mass + chamy.mass + tilden.mass)
+    CM.pos = cOfM
 
     #stopping state -> end sim if any masses collide
     if ((mag(rTV) < minRad) or (mag(rTC) < minRad) or (mag(rCV) < minRad)):
@@ -197,7 +196,7 @@ while run:
     chamy.trail.append(pos=chamy.pos)
 
 
-    #CM.trail.append(pos=CM.pos)
+    CM.trail.append(pos=CM.pos)
 
     #mark current position
     #curr = ved.pos.y
@@ -211,9 +210,12 @@ while run:
 
     #checking for energy conservation: GPE + KE
     pct = abs((energy() / initEnergy) - 1) * 100
-    print(pct, time / 86400, pct > 5)
+    #print(pct, time / 86400, pct > 5)
+
+    #stop program if error in energy > 5%
     if(pct > 5):
         run = False
+        print(pct, time / 86400, pct > 5)
 
 
     #determining dt based on distance
