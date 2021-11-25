@@ -164,19 +164,31 @@ while run:
     #mark last position
     #prev = ved.pos.y
 
-    #update pos via verlet velocity
-    ved.pos += (ved.velocity * dt) + ((0.5 * ved.accel) * (dt**2))
-    chamy.pos += (chamy.velocity * dt) + ((0.5 * chamy.accel) * (dt**2))
-    tilden.pos += (tilden.velocity * dt) + ((0.5 * tilden.accel) * (dt ** 2))
+    # #update pos via verlet velocity
+    # ved.pos += (ved.velocity * dt) + ((0.5 * ved.accel) * (dt**2))
+    # chamy.pos += (chamy.velocity * dt) + ((0.5 * chamy.accel) * (dt**2))
+    # tilden.pos += (tilden.velocity * dt) + ((0.5 * tilden.accel) * (dt ** 2))
+    #
+    # #update accel and velocity
+    # vedAccelCurr = ved.accel
+    # chamyAccelCurr = chamy.accel
+    # tildenAccelCurr = tilden.accel
+    # update()
+    # ved.velocity += (vedAccelCurr + ved.accel) * (0.5 * dt)
+    # chamy.velocity += (chamyAccelCurr + chamy.accel) * (0.5 * dt)
+    # tilden.velocity += (tildenAccelCurr + tilden.accel) * (0.5 * dt)
 
-    #update accel and velocity
-    vedAccelCurr = ved.accel
-    chamyAccelCurr = chamy.accel
-    tildenAccelCurr = tilden.accel
+
+    #update via euler's integration (to test error)
     update()
-    ved.velocity += (vedAccelCurr + ved.accel) * (0.5 * dt)
-    chamy.velocity += (chamyAccelCurr + chamy.accel) * (0.5 * dt)
-    tilden.velocity += (tildenAccelCurr + tilden.accel) * (0.5 * dt)
+
+    ved.velocity += ved.accel * dt
+    tilden.velocity += tilden.accel * dt
+    chamy.velocity += chamy.accel * dt
+
+    ved.pos += ved.velocity * dt
+    tilden.pos += tilden.velocity * dt
+    chamy.pos += chamy.velocity * dt
 
     #trails
     ved.trail.append(pos = ved.pos)
@@ -195,7 +207,7 @@ while run:
     """
 
     #checking for energy conservation: GPE + KE
-    print( abs((energy()[0] + energy()[1]) / initEnergy) - 1, time / 86400)
+    print( abs((energy()[0] + energy()[1]) / initEnergy - 1) * 100, time / 86400)
     #maxEnergyDiff = 0
     #print((energy()[0] + energy()[1]))
     # currEnergy = energy()[0] + energy()[1]
