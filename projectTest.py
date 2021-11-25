@@ -31,7 +31,8 @@ v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
 s = 1
-v = 196.23746
+#196.23746, maxdt = 2000
+v = 196.23773
 #100 - three rings
 #250 - three rings but bodies start on inside
 
@@ -106,7 +107,7 @@ CM.trail = curve(color=color.magenta) #,retain=250)
 update()
 
 
-maxDT = 2000
+maxDT = 500
 minDT = 1
 stableRate = 300
 maxRate = 600
@@ -138,7 +139,7 @@ while run:
     #newRate = stableRate * maxDT / dt
     #if(newRate > maxRate):
     #    newRate = maxRate
-    rate(100)
+    rate(200)
 
     #update lines
     if(showLines):
