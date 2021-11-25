@@ -31,7 +31,9 @@ v8x = 0.93240737 * b
 v8y = 0.86473146 * b
 
 s = 1
-v = 100
+v = 196.27
+#100 - three rings
+#250 - three rings but bodies start on inside
 
 ved.velocity = vector(v, 0, 0)
 ved.accel = vector(0, 0, 0)
@@ -128,7 +130,7 @@ b2 = curve(color = color.gray(0.5), retain = 2)
 c2 = curve(color = color.gray(0.5), retain = 2)
 
 run = True
-showLines = False
+showLines = True
 
 while run:
 
