@@ -5,7 +5,7 @@ from heapq import nsmallest
 brown = vector(0.4,0.2,0.6)
 
 minRad = 1e6
-d = 1e8
+d = 1e9
 
 sunEarthDist = 1.49598e11
 eSpeed = 29839.7170
